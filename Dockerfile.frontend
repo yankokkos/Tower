@@ -5,11 +5,12 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copiar arquivos de dependências
-COPY package*.json ./
+COPY package.json ./
+COPY package-lock.json* ./
 COPY vite.config.ts ./
 
-# Instalar dependências
-RUN npm ci
+# Instalar dependências (usa npm ci se lock existe, senão npm install)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 # Copiar código fonte
 COPY src ./src
