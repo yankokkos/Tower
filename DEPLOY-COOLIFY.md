@@ -23,8 +23,9 @@ Este guia explica como fazer o deploy do backend Node.js no Coolify usando Git.
 ### Opção A: Usando Dockerfile (Recomendado)
 
 1. No Coolify, certifique-se de que o **Dockerfile** está sendo detectado
-2. O Coolify deve detectar automaticamente o `Dockerfile` na pasta `backend/`
-3. Se necessário, configure o **Dockerfile Path**: `backend/Dockerfile`
+2. O Coolify deve detectar automaticamente o `Dockerfile` na **raiz do repositório**
+3. O Dockerfile na raiz já está configurado para fazer build do `backend/`
+4. **NÃO** configure Dockerfile Path - deixe em branco ou use `Dockerfile` (raiz)
 
 ### Opção B: Build Manual
 
