@@ -4,10 +4,11 @@ FROM node:20-alpine AS builder
 # Instalar dependências e fazer build
 WORKDIR /app
 
-# Copiar arquivos de dependências
+# Copiar arquivos de dependências e configuração
 COPY package.json ./
 COPY package-lock.json* ./
 COPY vite.config.ts ./
+COPY tsconfig*.json* ./
 
 # Instalar dependências (usa npm ci se lock existe, senão npm install)
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
@@ -16,8 +17,10 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY src ./src
 COPY index.html ./
 
-# Build do frontend
-RUN npm run build
+# Build do frontend (apenas Vite, sem build do backend)
+# Usa NODE_ENV=production para otimizar o build
+ENV NODE_ENV=production
+RUN npx vite build || (echo "Build failed, showing error:" && cat /app/build/.vite/build.log 2>/dev/null || true && exit 1)
 
 # Estágio de produção: Nginx
 FROM nginx:alpine
