@@ -6,9 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile.production
     container_name: tower-rpg-app
-    # Porta será gerenciada pelo Cloudify/Coolify automaticamente
-    expose:
-      - "80"
+    ports:
+      - "3693:80"
     environment:
       # Variáveis de ambiente do backend
       - DB_HOST=${DB_HOST}
