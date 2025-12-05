@@ -1,6 +1,9 @@
 # Dockerfile na raiz para o Coolify
 # Este arquivo referencia o backend/
 
+# Nome da imagem (usado pelo Coolify)
+# ARG BUILDKIT_INLINE_CACHE=1
+
 FROM node:18-alpine AS builder
 
 WORKDIR /app

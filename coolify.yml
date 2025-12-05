@@ -1,0 +1,16 @@
+# Configuração do Coolify para Tower RPG Backend
+version: '1.0'
+
+build:
+  dockerfile: Dockerfile
+  context: .
+  image: tower-rpg-backend
+
+deploy:
+  port: 5001
+  healthcheck:
+    path: /health
+    interval: 30
+    timeout: 3
+    retries: 3
+

@@ -25,7 +25,11 @@ Este guia explica como fazer o deploy do backend Node.js no Coolify usando Git.
 1. No Coolify, certifique-se de que o **Dockerfile** está sendo detectado
 2. O Coolify deve detectar automaticamente o `Dockerfile` na **raiz do repositório**
 3. O Dockerfile na raiz já está configurado para fazer build do `backend/`
-4. **NÃO** configure Dockerfile Path - deixe em branco ou use `Dockerfile` (raiz)
+4. **IMPORTANTE**: No Coolify, configure:
+   - **Dockerfile Path**: `Dockerfile` (ou deixe em branco se detectar automaticamente)
+   - **Build Context**: `.` (raiz do repositório)
+   - **Image Name**: `tower-rpg-backend` (ou qualquer nome em minúsculas, sem espaços)
+5. Se o erro "invalid tag" persistir, tente usar **Build Pack: Node.js** ao invés de Docker
 
 ### Opção B: Build Manual
 
