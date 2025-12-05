@@ -9,10 +9,11 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copiar arquivos de dependências do backend
-COPY backend/package.json backend/package-lock.json* ./
+COPY backend/package.json ./
+COPY backend/package-lock.json* ./
 
-# Instalar dependências
-RUN npm ci
+# Instalar dependências (usa npm install se não houver package-lock.json)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 # Copiar código fonte do backend
 COPY backend/ .
@@ -26,8 +27,9 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copiar package.json e instalar apenas dependências de produção
-COPY backend/package.json backend/package-lock.json* ./
-RUN npm ci --only=production && npm cache clean --force
+COPY backend/package.json ./
+COPY backend/package-lock.json* ./
+RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --production; fi && npm cache clean --force
 
 # Copiar arquivos compilados do stage de build
 COPY --from=builder /app/dist ./dist
