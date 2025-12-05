@@ -19,9 +19,9 @@ COPY tsconfig.json* ./
 COPY src ./src
 COPY index.html ./
 
-# Build do frontend
+# Build do frontend (apenas vite build, sem backend)
 ENV NODE_ENV=production
-RUN npm run build
+RUN npx vite build
 
 # ============================================
 # Stage 2: Backend PHP
