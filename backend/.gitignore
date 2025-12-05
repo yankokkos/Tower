@@ -1,7 +1,0 @@
-vendor/
-composer.lock
-.htaccess
-*.log
-.env
-.env.local
-

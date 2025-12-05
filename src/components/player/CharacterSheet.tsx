@@ -38,7 +38,7 @@ export function CharacterSheet({ character, onBack, onEdit, onUpdate, canEdit }:
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-[#00FF41]">{character.name}</h1>
+                <h1 className="text-[#00FF41]">{character.name}</h1>
                   {character.codename && (
                     <span className="text-[#00DDFF] text-lg">"{character.codename}"</span>
                   )}
@@ -422,11 +422,11 @@ export function CharacterSheet({ character, onBack, onEdit, onUpdate, canEdit }:
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <p className="text-white font-semibold">{item.name}</p>
-                        {item.equipped && (
+                    {item.equipped && (
                           <span className="bg-[#00FF41]/20 text-[#00FF41] px-2 py-0.5 rounded text-xs">
-                            EQUIPADO
-                          </span>
-                        )}
+                        EQUIPADO
+                      </span>
+                    )}
                       </div>
                       <p className="text-[#999999] text-sm capitalize">{item.type}</p>
                       {item.description && (

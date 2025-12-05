@@ -786,7 +786,7 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                 {formData.skills.map((skill) => (
                   <div key={skill.id} className="bg-[#1A1A1A] rounded p-3 border border-[#00FF41]/50">
                     <div className="flex items-center justify-between mb-2">
-                      <div>
+                    <div>
                         <p className="text-white font-semibold">{skill.name}</p>
                         <p className="text-[#999999] text-sm">
                           Nível {skill.level} - {skill.attribute}
@@ -801,7 +801,7 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                             </span>
                           )}
                         </p>
-                      </div>
+                    </div>
                       <div className="flex gap-2">
                         <Button
                           type="button"
@@ -811,13 +811,13 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                         >
                           {editingSkillId === skill.id ? 'Fechar' : 'Especializações'}
                         </Button>
-                        <Button
-                          type="button"
-                          variant="danger"
-                          size="sm"
-                          onClick={() => removeSkill(skill.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
+                    <Button
+                      type="button"
+                      variant="danger"
+                      size="sm"
+                      onClick={() => removeSkill(skill.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
@@ -842,7 +842,7 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                                   onClick={() => removeSpecialization(skill.id, spec.id)}
                                 >
                                   <Trash2 className="w-3 h-3" />
-                                </Button>
+                    </Button>
                               </div>
                             ))}
                           </div>
@@ -1404,7 +1404,7 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                               EQUIPADO
                             </span>
                           )}
-                        </div>
+                      </div>
                         <p className="text-[#999999] text-sm capitalize">{item.type}</p>
                         {item.description && (
                           <p className="text-[#CCCCCC] text-sm mt-1">{item.description}</p>
@@ -1435,14 +1435,14 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                         >
                           {item.equipped ? 'Desequipar' : 'Equipar'}
                         </Button>
-                        <Button
-                          type="button"
-                          variant="danger"
-                          size="sm"
-                          onClick={() => removeEquipment(item.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      <Button
+                        type="button"
+                        variant="danger"
+                        size="sm"
+                        onClick={() => removeEquipment(item.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                       </div>
                     </div>
                   </div>
@@ -1452,28 +1452,28 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
             
             <div className="space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <Input
-                  placeholder="Nome do item"
-                  value={newEquipment.name}
-                  onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
-                />
-                <select
-                  className="px-4 py-2 bg-[#1A1A1A] border-2 border-[#00FF41] text-white rounded"
-                  value={newEquipment.type}
+              <Input
+                placeholder="Nome do item"
+                value={newEquipment.name}
+                onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
+              />
+              <select
+                className="px-4 py-2 bg-[#1A1A1A] border-2 border-[#00FF41] text-white rounded"
+                value={newEquipment.type}
                   onChange={(e) => setNewEquipment({ ...newEquipment, type: e.target.value as any, damage: '', defense: 0, dexterityPenalty: 0 })}
-                >
-                  <option value="weapon">Arma</option>
-                  <option value="armor">Armadura</option>
-                  <option value="tool">Ferramenta</option>
-                  <option value="artifact">Artefato</option>
-                  <option value="consumable">Consumível</option>
-                  <option value="other">Outro</option>
-                </select>
-                <Input
-                  placeholder="Descrição"
-                  value={newEquipment.description}
-                  onChange={(e) => setNewEquipment({ ...newEquipment, description: e.target.value })}
-                />
+              >
+                <option value="weapon">Arma</option>
+                <option value="armor">Armadura</option>
+                <option value="tool">Ferramenta</option>
+                <option value="artifact">Artefato</option>
+                <option value="consumable">Consumível</option>
+                <option value="other">Outro</option>
+              </select>
+              <Input
+                placeholder="Descrição"
+                value={newEquipment.description}
+                onChange={(e) => setNewEquipment({ ...newEquipment, description: e.target.value })}
+              />
               </div>
               
               {newEquipment.type === 'weapon' && (
@@ -1575,9 +1575,9 @@ export function CharacterForm({ character, campaignId, playerId, onSave, onCance
                   size="sm"
                   disabled={!newRelationship.name}
                 >
-                  <Plus className="w-4 h-4" />
-                  Adicionar
-                </Button>
+                <Plus className="w-4 h-4" />
+                Adicionar
+              </Button>
               </div>
               <Input
                 placeholder="Descrição do relacionamento (opcional)"

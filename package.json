@@ -54,8 +54,8 @@
       },
       "scripts": {
           "dev": "vite",
-          "build": "vite build && npm run build:backend",
-          "build:backend": "cd backend && composer install --no-dev --optimize-autoloader && cd .. && node scripts/copy-backend.js",
-          "copy:backend": "node scripts/copy-backend.js"
+          "build": "vite build",
+          "build:backend": "cd backend && npm install && npm run build",
+          "dev:backend": "cd backend && npm run dev"
       }
   }
