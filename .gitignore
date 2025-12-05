@@ -1,0 +1,68 @@
+# Dependencies
+node_modules/
+vendor/
+backend/vendor/
+build/api/vendor/
+
+# Build outputs
+build/
+dist/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+config.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker
+.docker/
+
+# Database
+*.sql.backup
+*.db
+*.sqlite
+
+# PHP
+composer.phar
+composer.lock.backup
+
+# Backup files
+*.bak
+*.backup
+*~
+
