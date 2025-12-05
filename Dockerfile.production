@@ -1,0 +1,169 @@
+# Dockerfile Otimizado para Produção (Hostinger Cloudify)
+# Frontend servido com Nginx
+# Backend PHP com Apache
+
+# ============================================
+# Stage 1: Build do Frontend
+# ============================================
+FROM node:20-alpine AS frontend-builder
+
+WORKDIR /app
+
+# Copiar e instalar dependências (incluindo devDependencies para build)
+COPY package*.json ./
+RUN npm ci
+
+# Copiar código fonte
+COPY vite.config.ts ./
+COPY tsconfig.json* ./
+COPY src ./src
+COPY index.html ./
+
+# Build do frontend
+ENV NODE_ENV=production
+RUN npm run build
+
+# ============================================
+# Stage 2: Backend PHP
+# ============================================
+FROM php:8.1-apache AS backend-builder
+
+# Instalar extensões e ferramentas
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-install pdo pdo_mysql zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copiar backend
+WORKDIR /var/www/html/backend
+COPY backend/composer*.json ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+COPY backend ./
+
+# ============================================
+# Stage 3: Imagem Final de Produção
+# ============================================
+FROM php:8.1-apache
+
+# Instalar extensões PHP e Nginx
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    nginx \
+    curl \
+    && docker-php-ext-install pdo pdo_mysql zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Habilitar mod_rewrite
+RUN a2enmod rewrite headers
+
+# Configurar diretórios
+WORKDIR /var/www/html
+
+# Copiar backend
+COPY --from=backend-builder /var/www/html/backend ./backend
+
+# Copiar frontend buildado
+COPY --from=frontend-builder /app/build ./frontend
+
+# Configurar Apache para backend (porta 8080)
+RUN echo '<VirtualHost *:8080>\n\
+    ServerName api.localhost\n\
+    DocumentRoot /var/www/html/backend/public\n\
+    \n\
+    <Directory /var/www/html/backend/public>\n\
+        Options -Indexes +FollowSymLinks\n\
+        AllowOverride All\n\
+        Require all granted\n\
+        \n\
+        RewriteEngine On\n\
+        RewriteCond %{REQUEST_FILENAME} !-f\n\
+        RewriteCond %{REQUEST_FILENAME} !-d\n\
+        RewriteRule ^(.*)$ index.php [QSA,L]\n\
+    </Directory>\n\
+    \n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-available/backend.conf
+
+RUN a2ensite backend.conf
+
+# Configurar Nginx para frontend (porta 80)
+RUN echo 'server {\n\
+    listen 80;\n\
+    server_name _;\n\
+    root /var/www/html/frontend;\n\
+    index index.html;\n\
+    \n\
+    # Gzip compression\n\
+    gzip on;\n\
+    gzip_vary on;\n\
+    gzip_min_length 1024;\n\
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/json;\n\
+    \n\
+    # Frontend - SPA routing\n\
+    location / {\n\
+        try_files $uri $uri/ /index.html;\n\
+        add_header Cache-Control "no-cache";\n\
+    }\n\
+    \n\
+    # API proxy\n\
+    location /api {\n\
+        proxy_pass http://localhost:8080;\n\
+        proxy_http_version 1.1;\n\
+        proxy_set_header Upgrade $http_upgrade;\n\
+        proxy_set_header Connection "upgrade";\n\
+        proxy_set_header Host $host;\n\
+        proxy_set_header X-Real-IP $remote_addr;\n\
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n\
+        proxy_set_header X-Forwarded-Proto $scheme;\n\
+        proxy_cache_bypass $http_upgrade;\n\
+    }\n\
+    \n\
+    # Assets estáticos com cache\n\
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {\n\
+        expires 1y;\n\
+        add_header Cache-Control "public, immutable";\n\
+    }\n\
+    \n\
+    # Security headers\n\
+    add_header X-Frame-Options "SAMEORIGIN" always;\n\
+    add_header X-Content-Type-Options "nosniff" always;\n\
+    add_header X-XSS-Protection "1; mode=block" always;\n\
+}' > /etc/nginx/sites-available/default
+
+# Script de inicialização
+RUN echo '#!/bin/bash\n\
+set -e\n\
+\n\
+# Aguardar um pouco para garantir que tudo está pronto\n\
+sleep 2\n\
+\n\
+# Iniciar Apache em background\n\
+apache2ctl -D FOREGROUND &\n\
+\n\
+# Aguardar Apache iniciar\n\
+sleep 3\n\
+\n\
+# Iniciar Nginx em foreground\n\
+exec nginx -g "daemon off;"' > /start.sh \
+    && chmod +x /start.sh
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+EXPOSE 80
+
+CMD ["/start.sh"]
+

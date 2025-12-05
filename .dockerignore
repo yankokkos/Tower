@@ -1,63 +1,56 @@
-# Node modules
+# Dependências
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build files
+vendor/
 build/
-dist/
-*.log
+
+# Arquivos de ambiente (serão passados via volumes ou variáveis)
+config.env
+.env
+.env.local
+.env.*.local
 
 # Git
 .git/
 .gitignore
 .gitattributes
 
-# IDE
+# Documentação
+*.md
+!README.md
+
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # OS
 .DS_Store
 Thumbs.db
 
-# Environment
-.env
-.env.local
-.env.*.local
-config.env
+# Testes
+coverage/
+.nyc_output/
 
-# Documentation
-*.md
-!README.md
+# Temporários
+*.tmp
+*.temp
+.cache/
+
+# Arquivos de documentação do sistema
+a tower/
+
+# Scripts de desenvolvimento
+scripts/
 
 # Docker
 docker-compose.yml
 Dockerfile*
 .dockerignore
-
-# Database
-*.sql
-backend/database/
-
-# Scripts
-scripts/
-backend/scripts/
-
-# Test files
-tests/
-*.test.*
-*.spec.*
-
-# Coverage
-coverage/
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-
